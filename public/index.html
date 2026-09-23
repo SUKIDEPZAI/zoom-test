@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Zoom Test Client</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, sans-serif;
+      background: #f5f7fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 650px;
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.08);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 16px;
+      margin-right: 8px;
+      font-size: 15px;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+    }
+
+    .note {
+      margin-top: 22px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      line-height: 1.5;
+    }
+
+    #status {
+      margin-top: 15px;
+      min-height: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <h1>Zoom Test Client</h1>
+
+    <p>
+      Client kiểm thử thủ công cho một người.
+      Nhập Zoom Join URL rồi mở cuộc họp trong tab mới.
+    </p>
+
+    <label for="zoomLink">Zoom meeting link</label>
+
+    <input
+      id="zoomLink"
+      type="url"
+      placeholder="https://zoom.us/j/..."
+      autocomplete="off"
+    >
+
+    <button id="openBtn" class="primary">
+      Mở Zoom
+    </button>
+
+    <button id="clearBtn" class="secondary" type="button">
+      Xóa
+    </button>
+
+    <div id="status"></div>
+
+    <div class="note">
+      <strong>Lưu ý:</strong>
+      Microphone, camera, waiting room và screen sharing
+      sẽ được thao tác trực tiếp trong Zoom.
+    </div>
+  </main>
+
+  <script>
+    const input = document.getElementById("zoomLink");
+    const openBtn = document.getElementById("openBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const status = document.getElementById("status");
+
+    function isValidZoomUrl(value) {
+      try {
+        const url = new URL(value);
+
+        if (!["https:", "http:"].includes(url.protocol)) {
+          return false;
+        }
+
+        return /(^|\.)zoom\.us$/i.test(url.hostname);
+      } catch {
+        return false;
+      }
+    }
+
+    openBtn.addEventListener("click", () => {
+      const value = input.value.trim();
+
+      if (!isValidZoomUrl(value)) {
+        status.textContent =
+          "Hãy nhập một Zoom URL hợp lệ, ví dụ https://zoom.us/j/...";
+        return;
+      }
+
+      window.open(
+        value,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+      status.textContent = "Đã mở Zoom trong tab mới.";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      status.textContent = "";
+      input.focus();
+    });
+  </script>
+</body>
+  </html>
